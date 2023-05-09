@@ -7,6 +7,7 @@ const ExpensesFilter = (props) => {
   const dropdownChangeHandler = (event) => {
     // console.log(event.target.value);
     const pickYear = event.target.value;
+    // console.log("Filter :", pickYear);
     props.onChangeFilter(pickYear);
   };
   return (

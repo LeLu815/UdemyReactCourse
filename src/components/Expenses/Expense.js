@@ -16,13 +16,12 @@ function Expense(props) {
 
   const filterChangeHandler = (selectedYear) => {
     setFilteredYear(selectedYear);
-    console.log(filteredYear);
   };
-  {
-    props.items.map((item) => {
-      console.log(item);
-    });
-  }
+  // {
+  //   props.items.map((item) => {
+  //     console.log(item);
+  //   });
+  // }
   return (
     <Card className="expenses">
       <ExpensesFilter
@@ -32,6 +31,7 @@ function Expense(props) {
       {/* JSX 요소의 배열은 리액트에서 나란히 랜더링되기 떄문에 배열로 리던해도 무방하다 */}
       {props.items.map((expense) => (
         <ExpenseItem
+          key={expense.id}
           title={expense.title}
           amount={expense.amount}
           date={expense.date}
