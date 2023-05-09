@@ -6,7 +6,7 @@ import { useState } from "react";
 
 function Expense(props) {
   const expenseList = props.expenses;
-  const [filteredYear, setFilteredYear] = useState("2023");
+  const [filteredYear, setFilteredYear] = useState("9999");
 
   // const [myTitle, setMyTitle] = useState("");
   const clickTitle = (value) => {
@@ -15,6 +15,7 @@ function Expense(props) {
   };
 
   const filterChangeHandler = (selectedYear) => {
+    console.log(selectedYear);
     setFilteredYear(selectedYear);
   };
   // {
@@ -29,16 +30,23 @@ function Expense(props) {
         onChangeFilter={filterChangeHandler}
       />
       {/* JSX 요소의 배열은 리액트에서 나란히 랜더링되기 떄문에 배열로 리던해도 무방하다 */}
-      {props.items.map((expense) => (
-        <ExpenseItem
-          key={expense.id}
-          title={expense.title}
-          amount={expense.amount}
-          date={expense.date}
-          id={expense.id}
-          onClickTitle={clickTitle}
-        />
-      ))}
+      {props.items
+        .filter((expense) => {
+          const year = expense.date.getFullYear();
+          return filteredYear === "9999" || year === Number(filteredYear);
+        })
+        .map((expense) => {
+          return (
+            <ExpenseItem
+              key={expense.id}
+              title={expense.title}
+              amount={expense.amount}
+              date={expense.date}
+              id={expense.id}
+              onClickTitle={clickTitle}
+            />
+          );
+        })}
     </Card>
   );
 }
