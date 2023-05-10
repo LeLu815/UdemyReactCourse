@@ -14,13 +14,6 @@ function ExpenseItem(props) {
     setTitle("clicked!!");
   };
 
-  // 이거는 내코드
-  const onCLickChange = () => {
-    const id = props.id;
-    console.log("ExpenseItem :", id);
-    props.onClickTitle(id);
-  };
-
   return (
     <Card className="expense-item">
       <ExpenseDate date={props.date} />
@@ -28,7 +21,6 @@ function ExpenseItem(props) {
         <h2>{props.title}</h2>
         <div className="expense-item__price">{props.amount}</div>
       </div>
-      <button onClick={onCLickChange}>Change Title</button>
     </Card>
   );
 }

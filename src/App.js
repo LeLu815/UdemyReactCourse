@@ -20,7 +20,7 @@ const DUMMY_EXPENSES = [
     id: "e4",
     title: "New Desk (Wooden)",
     amount: 450,
-    date: new Date(2026, 5, 12),
+    date: new Date(2025, 5, 12),
   },
 ];
 
@@ -33,27 +33,10 @@ function App() {
     });
   };
 
-  const clickChange = (value) => {
-    // expenses.find((obj) => Number(obj.id) === Number(value));
-    setExpenses((prevExpenses) => {
-      console.log(typeof prevExpenses);
-      console.log(prevExpenses);
-      return prevExpenses.map((obj) => {
-        console.log(typeof obj.id);
-        if (obj.id === String(value)) {
-          console.log("if 문 확인 :", obj.id);
-          obj.title = "clicked";
-          return obj;
-        }
-        return obj;
-      });
-    });
-  };
-
   return (
     <div>
       <NewExpense onAddExpense={addExpenseHandler} />
-      <Expense items={expenses} onClickChange={clickChange} />
+      <Expense items={expenses} />
     </div>
   );
 }
