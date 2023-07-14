@@ -1,30 +1,40 @@
-import React, { useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 
-import AddUser from "./components/Users/AddUser";
-import UserLsit from "./components/Users/UserList";
+import Login from "./components/Login/Login";
+import Home from "./components/Home/Home";
+import MainHeader from "./components/MainHeader/MainHeader";
 
 function App() {
-  const [userList, setUserList] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const addUserHandler = (username, userage) => {
-    // 함수가 상태를 업데이트 할 때에는 자동으로 가장 최신의 값을 가져온다!
-    setUserList((prevUserList) => {
-      return [
-        ...prevUserList,
-        {
-          name: username,
-          age: userage,
-          id: Math.random().toString(),
-        },
-      ];
-    });
+  // 모든 컴포넌트 재평가 이후에 의존성 조건이 변경되면 실행되고 내부에 state가 변경되면 다시 컴포넌트 재평가가 이루어진다
+  useEffect(() => {
+    const storedUserLoggedInInformation = localStorage.getItem("isLoggedIn");
+    if (storedUserLoggedInInformation === "1") {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const loginHandler = (email, password) => {
+    // We should of course check email and password
+    // But it's just a dummy/ demo anyways
+    localStorage.setItem("isLoggedIn", "1");
+    setIsLoggedIn(true);
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
   };
 
   return (
-    <Fragment>
-      <AddUser onAddUser={addUserHandler} />
-      <UserLsit users={userList} />
-    </Fragment>
+    <React.Fragment>
+      <MainHeader isAuthenticated={isLoggedIn} onLogout={logoutHandler} />
+      <main>
+        {!isLoggedIn && <Login onLogin={loginHandler} />}
+        {isLoggedIn && <Home onLogout={logoutHandler} />}
+      </main>
+    </React.Fragment>
   );
 }
 
