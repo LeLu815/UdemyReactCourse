@@ -8,7 +8,7 @@ import AuthContext from "./store/auth-context";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // 모든 컴포넌트 재평가 이후에 의존성 조건이 변경되면 실행되고 내부에 state가 변경되면 다시 컴포넌트 재평가가 이루어진다
+  // 모든 컴포넌트 재평가 이후에 의존성 조건이 변경되면 실행되고 내부에 state가 변경되면 다시 컴포넌트 재평가가 이루어진다!!
   useEffect(() => {
     const storedUserLoggedInInformation = localStorage.getItem("isLoggedIn");
     if (storedUserLoggedInInformation === "1") {
