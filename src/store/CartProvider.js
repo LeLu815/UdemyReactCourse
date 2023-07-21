@@ -29,14 +29,33 @@ const cartReducer = (state, action) => {
     } else {
       updatedItems = state.items.concat(action.item);
     }
-    console.log(updatedItems);
     return {
       items: updatedItems,
       totalAmount: updatedTotalAmount,
     };
   }
   if (action.type === "REMOVE") {
-    console.log(action);
+    let updatedItems = [...state.items];
+    const existingCartItemIndex = updatedItems.findIndex((item) => {
+      return item.id === action.id;
+    });
+    if (existingCartItemIndex !== -1) {
+      const updatedItem = updatedItems[existingCartItemIndex];
+      if (+updatedItem.amount === 1) {
+        updatedItems.splice(existingCartItemIndex, 1);
+      } else {
+        updatedItems[existingCartItemIndex].amount -= 1;
+      }
+    }
+    const updatedTotalAmount = updatedItems.reduce(
+      (accumulator, currenItem) =>
+        accumulator + currenItem.price * currenItem.amount,
+      0
+    );
+    return {
+      items: updatedItems,
+      totalAmount: updatedTotalAmount,
+    };
   }
   return defaultCartState;
 };
