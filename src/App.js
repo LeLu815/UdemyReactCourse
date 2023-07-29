@@ -1,60 +1,45 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 
-import MoviesList from "./components/MoviesList";
-import "./App.css";
+import Tasks from "./components/Tasks/Tasks";
+import NewTask from "./components/NewTask/NewTask";
+import useHttp from "./hooks/use-http";
 
 function App() {
-  const [movies, setmovies] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
-  const fetchMoviesHandler = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("https://swapi.dev/api/films/");
-      if (!response.ok) {
-        throw new Error("Something went wrong!");
-      }
-      const data = await response.json();
-
-      const transformedMovies = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseDate: movieData.release_date,
-        };
-      });
-      setmovies(transformedMovies);
-    } catch (error) {
-      setError(error.message);
-    }
-    setIsLoading(false);
-  }, []);
+  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
 
   useEffect(() => {
-    fetchMoviesHandler();
-  }, [fetchMoviesHandler]);
+    const transformTasks = (taskObj) => {
+      const loadedTasks = [];
 
-  let content = <p>Found no movies</p>;
+      for (const taskKey in taskObj) {
+        loadedTasks.push({ id: taskKey, text: taskObj[taskKey].text });
+      }
+      setTasks(loadedTasks);
+    };
 
-  if (movies.length > 0) {
-    content = <MoviesList movies={movies} />;
-  }
-  if (error) {
-    content = <p>{error}</p>;
-  }
-  if (isLoading) {
-    content = <p>Loading...</p>;
-  }
+    fetchTasks(
+      {
+        url: "https://udemyreact-80b78-default-rtdb.asia-southeast1.firebasedatabase.app/tasks.json",
+      },
+      transformTasks
+    );
+  }, [fetchTasks]);
+
+  const taskAddHandler = (task) => {
+    setTasks((prevTasks) => prevTasks.concat(task));
+  };
 
   return (
     <React.Fragment>
-      <section>
-        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
-      </section>
-      <section>{content}</section>
+      <NewTask onAddTask={taskAddHandler} />
+      <Tasks
+        items={tasks}
+        loading={isLoading}
+        error={error}
+        onFetch={fetchTasks}
+      />
     </React.Fragment>
   );
 }
